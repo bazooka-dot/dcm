@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en-US">
+<head>
+    <title>Devices</title>
+</head>
+<body>
+<h1>Device List</h1>
+
+<!-- Search Form -->
+<form th:action="@{/devices/view/search}" method="get">
+    <label for="field">Search Field:</label>
+    <select name="field" id="field">
+        <option value="name">Name</option>
+        <option value="owner">Owner</option>
+        <option value="macaddress">MAC Address</option>
+        <option value="ipaddress">IP Address</option>
+        <option value="type">Type</option>
+        <option value="serialnumber">Serial Number</option>
+        <option value="config">Config</option>
+    </select>
+    <input type="text" name="value" placeholder="Search value" required>
+    <button type="submit">Search</button>
+</form>
+
+<!-- Create Device Form -->
+<h2>Add Device</h2>
+<form th:action="@{/devices/view/add}" method="post">
+    <input type="text" name="name" placeholder="Name" required>
+    <input type="text" name="owner" placeholder="Owner" required>
+    <input type="text" name="macAddress" placeholder="MAC Address">
+    <input type="text" name="ipAddress" placeholder="IP Address">
+    <input type="text" name="type" placeholder="Type">
+    <input type="text" name="serialNumber" placeholder="Serial Number">
+    <input type="text" name="config" placeholder="Config">
+    <button type="submit">Add</button>
+</form>
+
+<!-- Device Table -->
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Owner</th>
+        <th>MAC Address</th>
+        <th>IP Address</th>
+        <th>Type</th>
+        <th>Serial Number</th>
+        <th>Config</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="device : ${devices}">
+        <td th:text="${device.id}"></td>
+        <td th:text="${device.name}"></td>
+        <td th:text="${device.owner}"></td>
+        <td th:text="${device.macAddress}"></td>
+        <td th:text="${device.ipAddress}"></td>
+        <td th:text="${device.type}"></td>
+        <td th:text="${device.serialNumber}"></td>
+        <td th:text="${device.config}"></td>
+        <td>
+            <form th:action="@{/devices/view/delete/{id}(id=${device.id})}" method="post" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
