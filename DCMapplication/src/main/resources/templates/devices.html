@@ -58,7 +58,8 @@
         <td th:text="${device.serialNumber}"></td>
         <td th:text="${device.config}"></td>
         <td>
-            <form th:action="@{/devices/view/delete/{id}(id=${device.id})}" method="post" style="display:inline;">
+            <!-- Only show delete if device.id is present -->
+            <form th:if="${device.id != null}" th:action="@{/devices/view/delete/{id}(id=${device.id})}" method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>
