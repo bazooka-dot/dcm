@@ -18,20 +18,25 @@
         <option value="serialnumber">Serial Number</option>
         <option value="config">Config</option>
     </select>
-    <input type="text" name="value" placeholder="Search value" required>
+    <label>
+        <input type="text" name="value" placeholder="Search value" required>
+    </label>
     <button type="submit">Search</button>
 </form>
 
 <!-- Create Device Form -->
 <h2>Add Device</h2>
 <form th:action="@{/devices/view/add}" method="post">
-    <input type="text" name="name" placeholder="Name" required>
-    <input type="text" name="owner" placeholder="Owner" required>
-    <input type="text" name="macAddress" placeholder="MAC Address">
-    <input type="text" name="ipAddress" placeholder="IP Address">
-    <input type="text" name="type" placeholder="Type">
-    <input type="text" name="serialNumber" placeholder="Serial Number">
-    <input type="text" name="config" placeholder="Config">
+    <label>
+        <input type="text" name="name" placeholder="Name" required>
+        <input type="text" name="owner" placeholder="Owner" required>
+        <input type="text" name="macAddress" placeholder="MAC Address">
+        <input type="text" name="ipAddress" placeholder="IP Address">
+        <input type="text" name="type" placeholder="Type">
+        <input type="text" name="serialNumber" placeholder="Serial Number">
+        <input type="text" name="config" placeholder="Config">
+    </label>
+
     <button type="submit">Add</button>
 </form>
 
@@ -58,8 +63,7 @@
         <td th:text="${device.serialNumber}"></td>
         <td th:text="${device.config}"></td>
         <td>
-            <!-- Only show delete if device.id is present -->
-            <form th:if="${device.id != null}" th:action="@{/devices/view/delete/{id}(id=${device.id})}" method="post" style="display:inline;">
+            <form th:if="${device.id != null}" th:action="@{/devices/view/device/{id}/delete(id=${device.id})}" method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>

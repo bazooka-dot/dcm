@@ -25,7 +25,6 @@ public class DeviceViewController {
 
     @GetMapping("/devices/view/search")
     public String searchDevices(@RequestParam String field, @RequestParam String value, Model model) {
-        // Simple switch for search, matching DeviceController logic
         switch (field.toLowerCase()) {
             case "name" -> model.addAttribute("devices", deviceRepository.findByNameContainingIgnoreCase(value));
             case "owner" -> model.addAttribute("devices", deviceRepository.findByOwner(value));
@@ -39,7 +38,7 @@ public class DeviceViewController {
         return "devices";
     }
 
-    @PostMapping("/devices/view/delete/{id}")
+    @PostMapping("/devices/view/device/{id}/delete")
     public String deleteDevice(@PathVariable Long id) {
         deviceRepository.deleteById(id);
         return "redirect:/devices/view";
