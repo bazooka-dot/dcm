@@ -20,6 +20,7 @@ services:
   app:
     build:
       context: .
+    image: dcm-app
     ports:
       - "8080:8080"
     depends_on:
@@ -31,6 +32,6 @@ services:
       SPRING_DATASOURCE_PASSWORD: dcm_password
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
     restart: on-failure
-
+#credentials should not be hardcoded in production, but for the sake of testing i went with that approach
 volumes:
   postgres_data:
