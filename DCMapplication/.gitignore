@@ -31,7 +31,18 @@ build/
 
 ### VS Code ###
 .vscode/
-### env###
+
+# Environment files
 .env
 .env.local
 .env.*.local
+DCMapplication/.env
+
+# Maven
+target/
+*.jar
+*.war
+
+# IDE
+.idea/
+*.iml
