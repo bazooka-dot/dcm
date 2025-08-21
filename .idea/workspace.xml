@@ -5,10 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9a9726d7-d3ad-46ec-bd22-456039bbc4a1" name="Changes" comment="third">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DCMapplication/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/DCMapplication/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DCMapplication/.env" beforeDir="false" afterPath="$PROJECT_DIR$/DCMapplication/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DCMapplication/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/DCMapplication/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DCMapplication/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/DCMapplication/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -117,7 +116,7 @@
       <workItem from="1755695614828" duration="2583000" />
       <workItem from="1755733569848" duration="5377000" />
       <workItem from="1755773167076" duration="1015000" />
-      <workItem from="1755774433285" duration="5531000" />
+      <workItem from="1755774433285" duration="7486000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -199,7 +198,15 @@
       <option name="project" value="LOCAL" />
       <updated>1755697957235</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="third">
+      <option name="closed" value="true" />
+      <created>1755788415158</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1755788415158</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
