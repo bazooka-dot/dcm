@@ -81,9 +81,6 @@ public class Device {
     public void setId(Long id) {
         this.id = id;
     }
-    public Device(){
-
-    }
-
+    public Device(){}
 
 }
