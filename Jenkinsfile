@@ -55,8 +55,12 @@ pipeline {
                 dir('DCMapplication') {
                     sh '''
                         docker run --rm \
+                           --network host \
                           -v "$PWD":/usr/src/app \
                           -w /usr/src/app \
+                          -e SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/dcm \
+                          -e SPRING_DATASOURCE_USERNAME=dcm_user \
+                          -e SPRING_DATASOURCE_PASSWORD=dcm_password_prod \
                           maven:3.9.6-eclipse-temurin-21 \
                           mvn clean test
                     '''
