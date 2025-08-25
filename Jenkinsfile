@@ -91,13 +91,14 @@ pipeline {
                 }
             }
         }
-
         stage('Deploy to App Server') {
             steps {
                 withCredentials([
-                    usernamePassword(credentialsId: 'postgres-db', usernameVariable: 'POSTGRES_USER', passwordVariable: 'POSTGRES_PASSWORD')
+                    string(credentialsId: 'postgres-database-password', variable: 'POSTGRES_PASSWORD'),
+                    string(credentialsId: 'database-user', variable: 'POSTGRES_USER'),
+                    string(credentialsId: 'database-name', variable: 'POSTGRES_DB')
                 ]) {
-                    sshagent(['app-server-ssh-key']) {
+                    sshagent(['app-server-key']) {
                         sh '''
                             # Copy application files to home directory
                             ssh -o StrictHostKeyChecking=no ${APP_SERVER_USER}@${APP_SERVER_IP} "mkdir -p ~/dcm"
@@ -106,7 +107,7 @@ pipeline {
                             # Deploy with docker compose
                             ssh ${APP_SERVER_USER}@${APP_SERVER_IP} "
                                 cd ~/dcm
-                                export POSTGRES_DB=dcm
+                                export POSTGRES_DB='${POSTGRES_DB}'
                                 export POSTGRES_USER='${POSTGRES_USER}'
                                 export POSTGRES_PASSWORD='${POSTGRES_PASSWORD}'
                                 docker compose down || true
