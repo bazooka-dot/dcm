@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        APP_SERVER_IP = '10.0.1.5'
-        APP_SERVER_USER = 'azureuser'
+        APP_SERVER_IP = '74.242.217.71'
+        APP_SERVER_USER = 'dcm'
     }
 
     stages {
@@ -21,7 +21,7 @@ pipeline {
                         docker run --rm \
                           -v "$PWD":/usr/src/app \
                           -w /usr/src/app \
-                          maven:3.9-openjdk-17 \
+                          maven:3.9-openjdk-21 \
                           mvn org.owasp:dependency-check-maven:check -DfailBuildOnCVSS=7 || true
                     '''
                 }
@@ -43,7 +43,7 @@ pipeline {
                         docker run --rm \
                           -v "$PWD":/usr/src/app \
                           -w /usr/src/app \
-                          maven:3.9-openjdk-17 \
+                          maven:3.9-openjdk-21 \
                           mvn checkstyle:check spotbugs:check || true
                     '''
                 }
@@ -57,7 +57,7 @@ pipeline {
                         docker run --rm \
                           -v "$PWD":/usr/src/app \
                           -w /usr/src/app \
-                          maven:3.9-openjdk-17 \
+                          maven:3.9-openjdk-21 \
                           mvn clean test
                     '''
                 }
@@ -72,7 +72,7 @@ pipeline {
                         docker run --rm \
                           -v "$PWD":/usr/src/app \
                           -w /usr/src/app \
-                          maven:3.9-openjdk-17 \
+                          maven:3.9-openjdk-21 \
                           mvn clean package -DskipTests
                     '''
                 }
@@ -137,19 +137,9 @@ pipeline {
         }
         success {
             echo 'Deployment completed successfully!'
-            emailext (
-                subject: "✅ Pipeline Success: ${env.JOB_NAME} - ${env.BUILD_NUMBER}",
-                body: "Deployment completed successfully. Check details at ${env.BUILD_URL}",
-                to: "your-email@domain.com"
-            )
         }
         failure {
             echo 'Pipeline failed!'
-            emailext (
-                subject: "❌ Pipeline Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER}",
-                body: "Pipeline failed. Check console output at ${env.BUILD_URL}",
-                to: "your-email@domain.com"
-            )
         }
     }
 }

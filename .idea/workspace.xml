@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9a9726d7-d3ad-46ec-bd22-456039bbc4a1" name="Changes" comment="third">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="9a9726d7-d3ad-46ec-bd22-456039bbc4a1" name="Changes" comment="fourth" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -118,7 +116,7 @@
       <workItem from="1756033784503" duration="12374000" />
       <workItem from="1756068553307" duration="5794000" />
       <workItem from="1756080473453" duration="37000" />
-      <workItem from="1756080527801" duration="723000" />
+      <workItem from="1756080527801" duration="1285000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -240,7 +238,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756079681111</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="fourth">
+      <option name="closed" value="true" />
+      <created>1756081813446</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1756081813446</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -252,6 +258,7 @@
     <MESSAGE value="Merge remote-tracking branch 'origin/main'&#10;&#10;# Conflicts:&#10;#&#9;DCMapplication/pom.xml&#10;#&#9;DCMapplication/src/main/resources/application.properties" />
     <MESSAGE value="second" />
     <MESSAGE value="third" />
-    <option name="LAST_COMMIT_MESSAGE" value="third" />
+    <MESSAGE value="fourth" />
+    <option name="LAST_COMMIT_MESSAGE" value="fourth" />
   </component>
 </project>
