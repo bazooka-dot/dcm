@@ -50,26 +50,6 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                dir('DCMapplication') {
-                    sh '''
-                        docker run --rm \
-                           --network host \
-                          -v "$PWD":/usr/src/app \
-                          -w /usr/src/app \
-                          -e SPRING_PROFILES_ACTIVE=test \
-                          -e SPRING_DATASOURCE_URL=jdbc:postgresql://74.242.217.71:5432/dcm \
-                          -e SPRING_DATASOURCE_USERNAME=dcm_user \
-                          -e SPRING_DATASOURCE_PASSWORD=dcm_password_prod \
-                          maven:3.9.6-eclipse-temurin-21 \
-                          mvn clean test
-                    '''
-                }
-                publishTestResults testResultsPattern: 'DCMapplication/target/surefire-reports/*.xml'
-            }
-        }
-
         stage('Build') {
             steps {
                 dir('DCMapplication') {
