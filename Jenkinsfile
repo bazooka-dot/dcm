@@ -80,11 +80,10 @@ pipeline {
             steps {
                 sshagent(['app-server-key']) {
                     sh '''
-                        scp -o StrictHostKeyChecking=no DCMapplication/target/*.jar ${APP_SERVER_USER}@${APP_SERVER_IP}:~/dcm/DCMaaplication/target/
-                    '''
-                    sh '''
+                        ssh -o StrictHostKeyChecking=no ${APP_SERVER_USER}@${APP_SERVER_IP} "mkdir -p ~/dcm/DCMapplication/target"
+                        scp -o StrictHostKeyChecking=no DCMapplication/target/*.jar ${APP_SERVER_USER}@${APP_SERVER_IP}:~/dcm/DCMapplication/target/
                         ssh -o StrictHostKeyChecking=no ${APP_SERVER_USER}@${APP_SERVER_IP} "
-                            cd ~/dcm/DCMaaplication
+                            cd ~/dcm/DCMapplication
                             docker compose down
                             docker compose up -d --build
                         "
