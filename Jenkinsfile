@@ -21,7 +21,7 @@ pipeline {
                         docker run --rm \
                           -v "$PWD":/usr/src/app \
                           -w /usr/src/app \
-                          maven:3.9-openjdk-21 \
+                          maven:3.9.6-eclipse-temurin-21-alpine \
                           mvn org.owasp:dependency-check-maven:check -DfailBuildOnCVSS=7 || true
                     '''
                 }
@@ -43,7 +43,7 @@ pipeline {
                         docker run --rm \
                           -v "$PWD":/usr/src/app \
                           -w /usr/src/app \
-                          maven:3.9-openjdk-21 \
+                          maven:3.9.6-eclipse-temurin-21-alpine \
                           mvn checkstyle:check spotbugs:check || true
                     '''
                 }
