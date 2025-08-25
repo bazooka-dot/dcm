@@ -57,7 +57,7 @@ pipeline {
                         docker run --rm \
                           -v "$PWD":/usr/src/app \
                           -w /usr/src/app \
-                          maven:3.9-openjdk-21 \
+                          maven: 3.9.6-eclipse-temurin-21\
                           mvn clean test
                     '''
                 }
