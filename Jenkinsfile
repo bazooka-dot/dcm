@@ -76,95 +76,40 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to App Server') {
-            steps {
-                withCredentials([
-                    string(credentialsId: 'postgres-database-password', variable: 'POSTGRES_PASSWORD'),
-                    string(credentialsId: 'database-user', variable: 'POSTGRES_USER'),
-                    string(credentialsId: 'database-name', variable: 'POSTGRES_DB')
-                ]) {
-                    sshagent(['app-server-key']) {
-                        script {
-                            try {
-                                // Test SSH connectivity first
-                                sh '''
-                                    echo "Testing SSH connectivity..."
-                                    ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 ${APP_SERVER_USER}@${APP_SERVER_IP} "echo 'SSH connection successful'"
-                                '''
+       stage('Deploy to App Server') {
+           steps {
+               echo "=== Starting Deploy Stage ==="
 
-                                // Copy application files with verbose output
-                                sh '''
-                                    echo "Creating directory on remote server..."
-                                    ssh -o StrictHostKeyChecking=no ${APP_SERVER_USER}@${APP_SERVER_IP} "mkdir -p ~/dcm"
+               // Test if we can run basic commands
+               sh '''
+                   echo "Current user: $(whoami)"
+                   echo "Jenkins workspace: $(pwd)"
+                   echo "Environment variables:"
+                   echo "APP_SERVER_IP: ${APP_SERVER_IP}"
+                   echo "APP_SERVER_USER: ${APP_SERVER_USER}"
+               '''
 
-                                    echo "Copying files to remote server..."
-                                    scp -v -r DCMapplication/* ${APP_SERVER_USER}@${APP_SERVER_IP}:~/dcm/
-                                '''
+               // Test SSH credential exists and works
+               sshagent(['app-server-key']) {
+                   sh '''
+                       echo "✓ SSH agent started"
+                       echo "SSH keys loaded:"
+                       ssh-add -l || echo "No keys found in SSH agent"
 
-                                // Deploy with detailed logging
-                                sh '''
-                                    echo "Starting deployment..."
-                                    ssh -o StrictHostKeyChecking=no ${APP_SERVER_USER}@${APP_SERVER_IP} "
-                                        set -e  # Exit on any error
-                                        cd ~/dcm
+                       echo "Testing SSH connection..."
+                       ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 -v ${APP_SERVER_USER}@${APP_SERVER_IP} "
+                           echo 'SSH connection successful!'
+                           whoami
+                           pwd
+                           docker --version || echo 'Docker not found'
+                           docker compose version || echo 'Docker Compose not found'
+                       "
+                   '''
+               }
 
-                                        echo 'Current directory contents:'
-                                        ls -la
-
-                                        echo 'Setting environment variables...'
-                                        export POSTGRES_DB='${POSTGRES_DB}'
-                                        export POSTGRES_USER='${POSTGRES_USER}'
-                                        export POSTGRES_PASSWORD='${POSTGRES_PASSWORD}'
-
-                                        echo 'Environment variables set:'
-                                        echo 'POSTGRES_DB=' \$POSTGRES_DB
-                                        echo 'POSTGRES_USER=' \$POSTGRES_USER
-                                        echo 'POSTGRES_PASSWORD is set'
-
-                                        echo 'Stopping existing containers...'
-                                        docker compose down --remove-orphans -v 2>&1 || echo 'No containers to stop'
-
-                                        echo 'Checking docker-compose.yml exists...'
-                                        if [ ! -f docker-compose.yml ]; then
-                                            echo 'ERROR: docker-compose.yml not found!'
-                                            ls -la
-                                            exit 1
-                                        fi
-
-                                        echo 'Starting new containers...'
-                                        docker compose up -d --build --force-recreate
-
-                                        echo 'Checking container status...'
-                                        docker compose ps
-                                        docker compose logs --tail=50
-                                    "
-                                '''
-                            } catch (Exception e) {
-                                echo "Deployment failed with error: ${e.getMessage()}"
-                                // Get remote logs for debugging
-                                sh '''
-                                    echo "Attempting to get remote system info for debugging..."
-                                    ssh -o StrictHostKeyChecking=no ${APP_SERVER_USER}@${APP_SERVER_IP} "
-                                        echo 'System info:'
-                                        uname -a
-                                        echo 'Docker version:'
-                                        docker --version || echo 'Docker not found'
-                                        echo 'Docker Compose version:'
-                                        docker compose version || echo 'Docker Compose not found'
-                                        echo 'Available space:'
-                                        df -h
-                                        echo 'Memory usage:'
-                                        free -h
-                                    " || echo "Could not retrieve remote system info"
-                                '''
-                                throw e
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
+               echo "=== SSH test completed ==="
+           }
+       }
         stage('Health Check') {
             steps {
                 script {
