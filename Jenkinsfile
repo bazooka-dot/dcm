@@ -76,39 +76,78 @@ pipeline {
                 }
             }
         }
-       stage('Deploy to App Server') {
-           steps {
-               echo "=== Starting Deploy Stage ==="
+        stage('Deploy to App Server') {
+            steps {
+                echo "=== Starting Deploy Stage ==="
 
-               // Test if we can run basic commands
-               sh '''
-                   echo "Current user: $(whoami)"
-                   echo "Jenkins workspace: $(pwd)"
-                   echo "Environment variables:"
-                   echo "APP_SERVER_IP: ${APP_SERVER_IP}"
-                   echo "APP_SERVER_USER: ${APP_SERVER_USER}"
-               '''
+                sh '''
+                    echo "Current user: $(whoami)"
+                    echo "Jenkins workspace: $(pwd)"
+                    echo "APP_SERVER_IP: ${APP_SERVER_IP}"
+                    echo "APP_SERVER_USER: ${APP_SERVER_USER}"
+                '''
 
-               // Test SSH credential exists and works
-               sshagent(['app-server-key']) {
-                   sh '''
-                       echo "✓ SSH agent started"
-                       echo "SSH keys loaded:"
-                       ssh-add -l || echo "No keys found in SSH agent"
+                // Test 1: Check if database credentials exist
+                script {
+                    try {
+                        echo "Testing database credentials..."
+                        withCredentials([string(credentialsId: 'postgres-database-password', variable: 'TEST_PASSWORD')]) {
+                            echo "✓ postgres-database-password credential found"
+                        }
+                    } catch (Exception e) {
+                        echo "✗ postgres-database-password credential MISSING: ${e.getMessage()}"
+                    }
 
-                       echo "Testing SSH connection..."
-                       ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 -v ${APP_SERVER_USER}@${APP_SERVER_IP} "
-                           echo 'SSH connection successful!'
-                           whoami
-                           pwd
-                           docker --version || echo 'Docker not found'
-                           docker compose version || echo 'Docker Compose not found'
-                       "
-                   '''
-               }
+                    try {
+                        withCredentials([string(credentialsId: 'database-user', variable: 'TEST_USER')]) {
+                            echo "✓ database-user credential found"
+                        }
+                    } catch (Exception e) {
+                        echo "✗ database-user credential MISSING: ${e.getMessage()}"
+                    }
 
-               echo "=== SSH test completed ==="
-           }
+                    try {
+                        withCredentials([string(credentialsId: 'database-name', variable: 'TEST_DB')]) {
+                            echo "✓ database-name credential found"
+                        }
+                    } catch (Exception e) {
+                        echo "✗ database-name credential MISSING: ${e.getMessage()}"
+                    }
+                }
+
+                // Test 2: Check if SSH credential exists
+                script {
+                    try {
+                        echo "Testing SSH credential..."
+                        sshagent(['app-server-key']) {
+                            echo "✓ app-server-key credential found and SSH agent started"
+                            sh 'ssh-add -l'
+                        }
+                    } catch (Exception e) {
+                        echo "✗ app-server-key credential MISSING or INVALID: ${e.getMessage()}"
+                        echo "Please check Jenkins → Manage Jenkins → Manage Credentials"
+                        echo "Make sure you have a credential with ID 'app-server-key'"
+                    }
+                }
+
+                // Test 3: Try a simple SSH connection
+                script {
+                    try {
+                        echo "Testing SSH connection..."
+                        sshagent(['app-server-key']) {
+                            sh '''
+                                ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 ${APP_SERVER_USER}@${APP_SERVER_IP} "echo 'SSH test successful'"
+                            '''
+                            echo "✓ SSH connection successful"
+                        }
+                    } catch (Exception e) {
+                        echo "✗ SSH connection failed: ${e.getMessage()}"
+                    }
+                }
+
+                echo "=== Debug tests completed ==="
+            }
+        }
        }
         stage('Health Check') {
             steps {
