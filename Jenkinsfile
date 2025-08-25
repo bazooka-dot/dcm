@@ -84,21 +84,82 @@ pipeline {
                     string(credentialsId: 'database-name', variable: 'POSTGRES_DB')
                 ]) {
                     sshagent(['app-server-key']) {
-                        sh '''
-                            # Copy application files to home directory
-                            ssh -o StrictHostKeyChecking=no ${APP_SERVER_USER}@${APP_SERVER_IP} "mkdir -p ~/dcm"
-                            scp -r DCMapplication/* ${APP_SERVER_USER}@${APP_SERVER_IP}:~/dcm/
+                        script {
+                            try {
+                                // Test SSH connectivity first
+                                sh '''
+                                    echo "Testing SSH connectivity..."
+                                    ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 ${APP_SERVER_USER}@${APP_SERVER_IP} "echo 'SSH connection successful'"
+                                '''
 
-                            # Deploy with docker compose
-                            ssh ${APP_SERVER_USER}@${APP_SERVER_IP} "
-                                cd ~/dcm
-                                export POSTGRES_DB='${POSTGRES_DB}'
-                                export POSTGRES_USER='${POSTGRES_USER}'
-                                export POSTGRES_PASSWORD='${POSTGRES_PASSWORD}'
-                                docker compose down || true
-                                docker compose up -d --build
-                            "
-                        '''
+                                // Copy application files with verbose output
+                                sh '''
+                                    echo "Creating directory on remote server..."
+                                    ssh -o StrictHostKeyChecking=no ${APP_SERVER_USER}@${APP_SERVER_IP} "mkdir -p ~/dcm"
+
+                                    echo "Copying files to remote server..."
+                                    scp -v -r DCMapplication/* ${APP_SERVER_USER}@${APP_SERVER_IP}:~/dcm/
+                                '''
+
+                                // Deploy with detailed logging
+                                sh '''
+                                    echo "Starting deployment..."
+                                    ssh -o StrictHostKeyChecking=no ${APP_SERVER_USER}@${APP_SERVER_IP} "
+                                        set -e  # Exit on any error
+                                        cd ~/dcm
+
+                                        echo 'Current directory contents:'
+                                        ls -la
+
+                                        echo 'Setting environment variables...'
+                                        export POSTGRES_DB='${POSTGRES_DB}'
+                                        export POSTGRES_USER='${POSTGRES_USER}'
+                                        export POSTGRES_PASSWORD='${POSTGRES_PASSWORD}'
+
+                                        echo 'Environment variables set:'
+                                        echo 'POSTGRES_DB=' \$POSTGRES_DB
+                                        echo 'POSTGRES_USER=' \$POSTGRES_USER
+                                        echo 'POSTGRES_PASSWORD is set'
+
+                                        echo 'Stopping existing containers...'
+                                        docker compose down --remove-orphans -v 2>&1 || echo 'No containers to stop'
+
+                                        echo 'Checking docker-compose.yml exists...'
+                                        if [ ! -f docker-compose.yml ]; then
+                                            echo 'ERROR: docker-compose.yml not found!'
+                                            ls -la
+                                            exit 1
+                                        fi
+
+                                        echo 'Starting new containers...'
+                                        docker compose up -d --build --force-recreate
+
+                                        echo 'Checking container status...'
+                                        docker compose ps
+                                        docker compose logs --tail=50
+                                    "
+                                '''
+                            } catch (Exception e) {
+                                echo "Deployment failed with error: ${e.getMessage()}"
+                                // Get remote logs for debugging
+                                sh '''
+                                    echo "Attempting to get remote system info for debugging..."
+                                    ssh -o StrictHostKeyChecking=no ${APP_SERVER_USER}@${APP_SERVER_IP} "
+                                        echo 'System info:'
+                                        uname -a
+                                        echo 'Docker version:'
+                                        docker --version || echo 'Docker not found'
+                                        echo 'Docker Compose version:'
+                                        docker compose version || echo 'Docker Compose not found'
+                                        echo 'Available space:'
+                                        df -h
+                                        echo 'Memory usage:'
+                                        free -h
+                                    " || echo "Could not retrieve remote system info"
+                                '''
+                                throw e
+                            }
+                        }
                     }
                 }
             }
