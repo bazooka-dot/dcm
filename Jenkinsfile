@@ -76,18 +76,20 @@ pipeline {
                 }
             }
         }
-        steps {
-            sshagent(['app-server-key']) {
-                sh '''
-                    scp -o StrictHostKeyChecking=no DCMapplication/target/*.jar ${APP_SERVER_USER}@${APP_SERVER_IP}:~/dcm/DCMaaplication/target/
-                '''
-                sh '''
-                    ssh -o StrictHostKeyChecking=no ${APP_SERVER_USER}@${APP_SERVER_IP} "
-                        cd ~/dcm/DCMaaplication
-                        docker compose down
-                        docker compose up -d --build
-                    "
-                '''
+        stage('Deploy') {
+            steps {
+                sshagent(['app-server-key']) {
+                    sh '''
+                        scp -o StrictHostKeyChecking=no DCMapplication/target/*.jar ${APP_SERVER_USER}@${APP_SERVER_IP}:~/dcm/DCMaaplication/target/
+                    '''
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no ${APP_SERVER_USER}@${APP_SERVER_IP} "
+                            cd ~/dcm/DCMaaplication
+                            docker compose down
+                            docker compose up -d --build
+                        "
+                    '''
+                }
             }
         }
         stage('Health Check') {
