@@ -76,40 +76,20 @@ pipeline {
                 }
             }
         }
-       stage('Deploy to App Server') {
-           steps {
-               echo "=== Starting Deploy Stage ==="
-
-               // Test if we can run basic commands
-               sh '''
-                   echo "Current user: $(whoami)"
-                   echo "Jenkins workspace: $(pwd)"
-                   echo "Environment variables:"
-                   echo "APP_SERVER_IP: ${APP_SERVER_IP}"
-                   echo "APP_SERVER_USER: ${APP_SERVER_USER}"
-               '''
-
-               // Test SSH credential exists and works
-               sshagent(['app-server-key']) {
-                   sh '''
-                       echo "✓ SSH agent started"
-                       echo "SSH keys loaded:"
-                       ssh-add -l || echo "No keys found in SSH agent"
-
-                       echo "Testing SSH connection..."
-                       ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 -v ${APP_SERVER_USER}@${APP_SERVER_IP} "
-                           echo 'SSH connection successful!'
-                           whoami
-                           pwd
-                           docker --version || echo 'Docker not found'
-                           docker compose version || echo 'Docker Compose not found'
-                       "
-                   '''
-               }
-
-               echo "=== SSH test completed ==="
-           }
-       }
+        steps {
+            sshagent(['app-server-key']) {
+                sh '''
+                    scp -o StrictHostKeyChecking=no DCMapplication/target/*.jar ${APP_SERVER_USER}@${APP_SERVER_IP}:~/dcm/DCMaaplication/target/
+                '''
+                sh '''
+                    ssh -o StrictHostKeyChecking=no ${APP_SERVER_USER}@${APP_SERVER_IP} "
+                        cd ~/dcm/DCMaaplication
+                        docker compose down
+                        docker compose up -d --build
+                    "
+                '''
+            }
+        }
         stage('Health Check') {
             steps {
                 script {
