@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        APP_SERVER_IP = '74.242.217.71'
-        APP_SERVER_USER = 'dcm'
+        APP_SERVER_IP = credentials('app-server-ip')
+        APP_SERVER_USER = credentials('app-server-user')
     }
 
     stages {
