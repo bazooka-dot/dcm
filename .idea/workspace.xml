@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9a9726d7-d3ad-46ec-bd22-456039bbc4a1" name="Changes" comment="sixth">
+    <list default="true" id="9a9726d7-d3ad-46ec-bd22-456039bbc4a1" name="Changes" comment="seventh">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DCMapplication/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/DCMapplication/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,8 +16,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
-        <option value="Class" />
         <option value="Dockerfile" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -121,7 +120,7 @@
       <workItem from="1756080473453" duration="37000" />
       <workItem from="1756080527801" duration="21875000" />
       <workItem from="1756297770856" duration="1669000" />
-      <workItem from="1756722444018" duration="673000" />
+      <workItem from="1756722444018" duration="2568000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -395,7 +394,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756298837371</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="seventh">
+      <option name="closed" value="true" />
+      <created>1756723227878</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1756723227878</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -410,6 +417,7 @@
     <MESSAGE value="fourth" />
     <MESSAGE value="fifth" />
     <MESSAGE value="sixth" />
-    <option name="LAST_COMMIT_MESSAGE" value="sixth" />
+    <MESSAGE value="seventh" />
+    <option name="LAST_COMMIT_MESSAGE" value="seventh" />
   </component>
 </project>
